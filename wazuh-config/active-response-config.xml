@@ -1,0 +1,12 @@
+<command>
+  <name>firewall-drop</name>
+  <executable>firewall-drop</executable>
+  <timeout_allowed>yes</timeout_allowed>
+</command>
+
+<active-response>
+  <command>firewall-drop</command>
+  <location>local</location>
+  <rules_id>5712</rules_id>
+  <timeout>120</timeout>
+</active-response>

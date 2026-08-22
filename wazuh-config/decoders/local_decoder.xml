@@ -1,0 +1,16 @@
+<!--
+  Earlier approach: a fully custom decoder for DVWA's Apache access log.
+  Kept here as a record of the debugging process - in practice, Wazuh's
+  built-in `web-accesslog` decoder (rule 31100) already matched the log
+  line first, so the working rule (see ../rules/local_rules.xml) builds
+  on that instead of this custom decoder.
+-->
+<decoder name="dvwa-web">
+  <prematch>^\d+\.\d+\.\d+\.\d+ - </prematch>
+</decoder>
+
+<decoder name="dvwa-web-child">
+  <parent>dvwa-web</parent>
+  <regex>^(\S+) \S+ \S+ \S+ "(\S+) (\S+) \S+" (\d+) </regex>
+  <order>srcip,protocol,url,id</order>
+</decoder>
