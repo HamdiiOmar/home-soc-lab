@@ -9,7 +9,7 @@ Built to go beyond "installed a SIEM with default rules" — this project
 focuses on writing and debugging real detection logic, and closing the
 loop from detection to automated defense.
 
-![Architecture diagram](architecture-diagram.svg)
+![Architecture diagram](screenshots/architecture-diagram.svg)
 
 ## What it does
 
@@ -43,6 +43,26 @@ loop from detection to automated defense.
   VMs (attacker, two targets, SIEM), with attention paid to keeping the
   lab genuinely isolated from the host network while still being usable.
 
+## Results
+
+**1. Automated response to an SSH brute-force.** Hydra from Kali triggers
+Wazuh rules 5710/5712; Active Response then blocks the attacker's IP
+(rule 651 "Host Blocked by firewall-drop Active Response") and unblocks it
+after the timeout.
+
+![Brute-force detection and Active Response in Wazuh](screenshots/brute-force-alert.png)
+
+**2. Custom SQL injection rule firing live.** Rule `100011` (level 12)
+alerts on SQLi attempts against DVWA, alongside the default PAM/sshd events.
+
+![Custom SQLi detection alert, rule 100011](screenshots/sqli-detection.png)
+
+**3. Custom live console.** A dependency-free Node proxy plus a React
+console polling the Wazuh indexer every 5 seconds, with severity-coded
+alerts and counters.
+
+![Custom SOC console](screenshots/custom-dashboard.png)
+
 ## Architecture
 
 | Component | Role | IP |
@@ -60,8 +80,9 @@ modern Ubuntu Server VM — a deliberate design decision, not an oversight.
 ## Repository contents
 
 ```
-├── architecture-diagram.svg
+├── screenshots/                     # architecture diagram + result screenshots
 ├── wazuh-config/
+│   ├── active-response-config.xml   # firewall-drop Active Response setup
 │   ├── decoders/local_decoder.xml   # not used in the final SQLi rule -
 │   │                                 # kept as an example of an earlier
 │   │                                 # approach; see README notes below
